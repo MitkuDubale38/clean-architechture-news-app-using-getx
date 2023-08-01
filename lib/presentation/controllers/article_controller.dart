@@ -20,5 +20,6 @@ class ArticleController extends GetxController {
     if (articles is DataSuccess) {
       articleList.addAll(articles.data!.toList());
     }
+    isLoading.value = false;
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:newsappusingcleanarchitechture/config/routes/routes.dart';
 import 'package:newsappusingcleanarchitechture/core/util/dependency.dart';
-import 'package:newsappusingcleanarchitechture/presentation/getx/bindings/bindings.dart';
-import 'package:newsappusingcleanarchitechture/presentation/pages/home.dart';
 
 void main() {
   DependencyCreator.init();
@@ -11,18 +11,16 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    ArticleBinding().dependencies();
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 23, 23, 23)),
       ),
-      home: Home(),
+      getPages: routes,
     );
   }
 }

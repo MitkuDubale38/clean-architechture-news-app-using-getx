@@ -3,12 +3,14 @@ import 'package:get/get.dart';
 import 'package:newsappusingcleanarchitechture/data/data_source/remote/news_api_service.dart';
 import 'package:newsappusingcleanarchitechture/data/repository/article_repository_impl.dart';
 import 'package:newsappusingcleanarchitechture/domain/repository/article_repository.dart';
+import 'package:newsappusingcleanarchitechture/domain/usecases/usecase.dart';
 
 class DependencyCreator {
   static init() {
-    Get.lazyPut(() => Dio());
-    Get.lazyPut(() => NewsApiService(Get.find<Dio>()));
-    Get.lazyPut<ArticleRepository>(
-        () => ArticleRepositoryImpl(Get.find<NewsApiService>()));
+    Get.put(Dio());
+    Get.put(NewsApiService(Get.find<Dio>()));
+    Get.put<ArticleRepository>(
+        ArticleRepositoryImpl(Get.find<NewsApiService>()));
+    Get.lazyPut(() => GetArticleUseCase(Get.find<ArticleRepository>()));
   }
 }
