@@ -8,7 +8,7 @@ class ArticleController extends GetxController {
   Rx<bool> isLoading = false.obs;
   RxList<ArticleEntity> articleList = RxList<ArticleEntity>([]);
   RxList<ArticleEntity> favArticleList = RxList<ArticleEntity>([]);
-  final GetArticleUseCase _articleUseCase = GetArticleUseCase(Get.find());
+  final ArticleUseCase _articleUseCase = ArticleUseCase(Get.find());
 
   @override
   void onReady() {
@@ -57,6 +57,12 @@ class ArticleController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
     }
+  }
+
+  List<ArticleEntity> search(String query, List<ArticleEntity> articles) {
+    List<ArticleEntity> results =
+        _articleUseCase.searchArticle(query, articles);
+    return results;
   }
 
   bool isFavorite(ArticleEntity article) {

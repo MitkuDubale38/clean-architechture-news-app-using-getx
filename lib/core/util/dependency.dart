@@ -13,6 +13,6 @@ class DependencyCreator {
     Get.put(NewsApiService(Get.find<Dio>()));
     Get.put<ArticleRepository>(ArticleRepositoryImpl(
         Get.find<NewsApiService>(), Get.find<HiveStorage>()));
-    Get.lazyPut(() => GetArticleUseCase(Get.find<ArticleRepository>()));
+    Get.lazyPut(() => ArticleUseCase(Get.find<ArticleRepository>()));
   }
 }

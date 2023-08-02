@@ -9,3 +9,7 @@ abstract class ArticleRepository {
   Future<LocalDataState<List<ArticleEntity>>> getFavoriteArticles();
   Future<LocalDataState<bool>> removeFromFavorite(ArticleEntity article);
 }
+
+
+
+

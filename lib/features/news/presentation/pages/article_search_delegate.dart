@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:newsappusingcleanarchitechture/features/news/domain/entity/article.dart';
-import 'package:newsappusingcleanarchitechture/features/news/domain/usecases/usecase.dart';
+import 'package:newsappusingcleanarchitechture/features/news/presentation/controllers/article_controller.dart';
 
 class ArticleSearchDelegate extends SearchDelegate<List<ArticleEntity>> {
   final List<ArticleEntity> articles;
-  GetArticleUseCase articleUseCase = Get.find();
+  ArticleController articleController = Get.find();
   ArticleSearchDelegate(this.articles);
 
   @override
@@ -32,7 +32,7 @@ class ArticleSearchDelegate extends SearchDelegate<List<ArticleEntity>> {
 
   @override
   Widget buildResults(BuildContext context) {
-    List<ArticleEntity> results = articleUseCase.searchArticle(query, articles);
+    List<ArticleEntity> results = articleController.search(query, articles);
     return ListView.builder(
       itemCount: results.length,
       itemBuilder: (context, index) {
@@ -48,7 +48,7 @@ class ArticleSearchDelegate extends SearchDelegate<List<ArticleEntity>> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<ArticleEntity> results = articleUseCase.searchArticle(query, articles);
+    List<ArticleEntity> results = articleController.search(query, articles);
     return ListView.builder(
       itemCount: results.length,
       itemBuilder: (context, index) {
