@@ -1,5 +1,3 @@
-import 'package:hive/hive.dart';
-
 abstract class LocalDataState<T> {
   final T? data;
   final dynamic error;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:newsappusingcleanarchitechture/presentation/controllers/article_controller.dart';
-import 'package:newsappusingcleanarchitechture/presentation/pages/article_search_delegate.dart';
+import 'package:newsappusingcleanarchitechture/features/news/presentation/controllers/article_controller.dart';
+import 'package:newsappusingcleanarchitechture/features/news/presentation/pages/article_search_delegate.dart';
 
 // ignore: must_be_immutable
 class Home extends StatelessWidget {
@@ -41,31 +41,23 @@ class Home extends StatelessWidget {
                         subtitle: Text(
                             articleController.articleList[index].description!),
                         trailing: IconButton(
-                            icon: articleController.favArticleList
-                                    .where((element) =>
-                                        element.title ==
-                                        articleController
-                                            .articleList[index].title)
-                                    .toList()
-                                    .isNotEmpty
-                                ? const Icon(Icons.favorite)
-                                : const Icon(Icons.favorite_outline),
-                            onPressed: () {
-                              articleController.favArticleList
-                                      .where((element) =>
-                                          element.title ==
-                                          articleController
-                                              .articleList[index].title)
-                                      .toList()
-                                      .isNotEmpty
-                                  ? articleController.removeFromFavorites(
-                                      articleController.articleList[index])
-                                  : articleController.addToFavorites(
-                                      articleController.articleList[index]);
-                            }),
+                          icon: articleController.isFavorite(
+                                  articleController.articleList[index])
+                              ? const Icon(Icons.favorite)
+                              : const Icon(Icons.favorite_outline),
+                          onPressed: () {
+                            articleController.isFavorite(
+                                    articleController.articleList[index])
+                                ? articleController.removeFromFavorites(
+                                    articleController.articleList[index])
+                                : articleController.addToFavorites(
+                                    articleController.articleList[index]);
+                          },
+                        ),
                       ),
                     );
-                  })
+                  },
+                )
               : const Center(
                   child: CircularProgressIndicator(),
                 );

@@ -1,14 +1,12 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:newsappusingcleanarchitechture/core/resources/data_state.dart';
 import 'package:newsappusingcleanarchitechture/core/resources/local_data_state.dart';
-import 'package:newsappusingcleanarchitechture/data/data_source/local/hive_service.dart';
-import 'package:newsappusingcleanarchitechture/data/data_source/remote/news_api_service.dart';
-import 'package:newsappusingcleanarchitechture/data/models/article.dart';
-import 'package:newsappusingcleanarchitechture/domain/entity/article.dart';
-import 'package:newsappusingcleanarchitechture/domain/repository/article_repository.dart';
+import 'package:newsappusingcleanarchitechture/features/news/data/data_source/local/hive_service.dart';
+import 'package:newsappusingcleanarchitechture/features/news/data/data_source/remote/news_api_service.dart';
+import 'package:newsappusingcleanarchitechture/features/news/data/models/article.dart';
+import 'package:newsappusingcleanarchitechture/features/news/domain/entity/article.dart';
+import 'package:newsappusingcleanarchitechture/features/news/domain/repository/article_repository.dart';
 
 class ArticleRepositoryImpl implements ArticleRepository {
   final NewsApiService _newsApiService;

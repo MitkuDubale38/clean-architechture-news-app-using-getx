@@ -1,14 +1,14 @@
 import 'package:get/get.dart';
 import 'package:newsappusingcleanarchitechture/core/resources/data_state.dart';
 import 'package:newsappusingcleanarchitechture/core/resources/local_data_state.dart';
-import 'package:newsappusingcleanarchitechture/domain/entity/article.dart';
-import 'package:newsappusingcleanarchitechture/domain/usecases/usecase.dart';
+import 'package:newsappusingcleanarchitechture/features/news/domain/entity/article.dart';
+import 'package:newsappusingcleanarchitechture/features/news/domain/usecases/usecase.dart';
 
 class ArticleController extends GetxController {
   Rx<bool> isLoading = false.obs;
   RxList<ArticleEntity> articleList = RxList<ArticleEntity>([]);
   RxList<ArticleEntity> favArticleList = RxList<ArticleEntity>([]);
-  final GetArticleUseCase _articleUseCase = GetArticleUseCase(Get.find());
+  final ArticleUseCase _articleUseCase = ArticleUseCase(Get.find());
 
   @override
   void onReady() {
@@ -57,5 +57,15 @@ class ArticleController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
     }
+  }
+
+  List<ArticleEntity> search(String query, List<ArticleEntity> articles) {
+    List<ArticleEntity> results =
+        _articleUseCase.searchArticle(query, articles);
+    return results;
+  }
+
+  bool isFavorite(ArticleEntity article) {
+    return favArticleList.any((element) => element.title == article.title);
   }
 }
