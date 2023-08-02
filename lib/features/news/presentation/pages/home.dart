@@ -41,31 +41,23 @@ class Home extends StatelessWidget {
                         subtitle: Text(
                             articleController.articleList[index].description!),
                         trailing: IconButton(
-                            icon: articleController.favArticleList
-                                    .where((element) =>
-                                        element.title ==
-                                        articleController
-                                            .articleList[index].title)
-                                    .toList()
-                                    .isNotEmpty
-                                ? const Icon(Icons.favorite)
-                                : const Icon(Icons.favorite_outline),
-                            onPressed: () {
-                              articleController.favArticleList
-                                      .where((element) =>
-                                          element.title ==
-                                          articleController
-                                              .articleList[index].title)
-                                      .toList()
-                                      .isNotEmpty
-                                  ? articleController.removeFromFavorites(
-                                      articleController.articleList[index])
-                                  : articleController.addToFavorites(
-                                      articleController.articleList[index]);
-                            }),
+                          icon: articleController.isFavorite(
+                                  articleController.articleList[index])
+                              ? const Icon(Icons.favorite)
+                              : const Icon(Icons.favorite_outline),
+                          onPressed: () {
+                            articleController.isFavorite(
+                                    articleController.articleList[index])
+                                ? articleController.removeFromFavorites(
+                                    articleController.articleList[index])
+                                : articleController.addToFavorites(
+                                    articleController.articleList[index]);
+                          },
+                        ),
                       ),
                     );
-                  })
+                  },
+                )
               : const Center(
                   child: CircularProgressIndicator(),
                 );

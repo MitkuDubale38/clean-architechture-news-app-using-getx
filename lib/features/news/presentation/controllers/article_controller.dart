@@ -58,4 +58,8 @@ class ArticleController extends GetxController {
       );
     }
   }
+
+  bool isFavorite(ArticleEntity article) {
+    return favArticleList.any((element) => element.title == article.title);
+  }
 }
