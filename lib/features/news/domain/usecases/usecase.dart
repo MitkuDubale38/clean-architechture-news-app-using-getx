@@ -1,8 +1,8 @@
 import 'package:newsappusingcleanarchitechture/core/resources/data_state.dart';
 import 'package:newsappusingcleanarchitechture/core/resources/local_data_state.dart';
 import 'package:newsappusingcleanarchitechture/core/usecases/usecase.dart';
-import 'package:newsappusingcleanarchitechture/domain/entity/article.dart';
-import 'package:newsappusingcleanarchitechture/domain/repository/article_repository.dart';
+import 'package:newsappusingcleanarchitechture/features/news/domain/entity/article.dart';
+import 'package:newsappusingcleanarchitechture/features/news/domain/repository/article_repository.dart';
 
 class GetArticleUseCase
     implements UseCase<DataState<List<ArticleEntity>>, void> {

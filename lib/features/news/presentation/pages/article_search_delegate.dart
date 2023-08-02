@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:newsappusingcleanarchitechture/domain/entity/article.dart';
-import 'package:newsappusingcleanarchitechture/domain/usecases/usecase.dart';
+import 'package:newsappusingcleanarchitechture/features/news/domain/entity/article.dart';
+import 'package:newsappusingcleanarchitechture/features/news/domain/usecases/usecase.dart';
 
 class ArticleSearchDelegate extends SearchDelegate<List<ArticleEntity>> {
   final List<ArticleEntity> articles;
