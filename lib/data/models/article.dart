@@ -1,9 +1,7 @@
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:newsappusingcleanarchitechture/domain/entity/article.dart';
 
 class ArticleModel extends ArticleEntity {
   const ArticleModel({
-    int? id,
     String? author,
     String? title,
     String? description,
@@ -18,7 +16,6 @@ class ArticleModel extends ArticleEntity {
           urlToImage: urlToImage,
           publishedAt: publishedAt,
           description: description,
-          id: id,
           title: title,
         );
   factory ArticleModel.fromJson(Map<String, dynamic> map) {
@@ -30,6 +27,29 @@ class ArticleModel extends ArticleEntity {
       urlToImage: map["urlToImage"] ?? "",
       publishedAt: map["publishedAt"] ?? "",
       content: map["content"] ?? "",
+    );
+  }
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'author': author,
+      'title': title,
+      'description': description,
+      'url': url,
+      'urlToImage': urlToImage,
+      'publishedAt': publishedAt,
+      'content': content,
+    };
+  }
+
+  factory ArticleModel.fromEntity(ArticleEntity entity) {
+    return ArticleModel(
+      author: entity.author,
+      content: entity.content,
+      description: entity.description,
+      publishedAt: entity.publishedAt,
+      title: entity.title,
+      url: entity.url,
+      urlToImage: entity.urlToImage,
     );
   }
 }

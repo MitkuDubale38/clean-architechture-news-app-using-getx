@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:newsappusingcleanarchitechture/config/routes/routes.dart';
 import 'package:newsappusingcleanarchitechture/core/util/dependency.dart';
 
-void main() {
+Future<void> main() async {
+  await Hive.initFlutter();
+  await Hive.openBox('newsApp');
   DependencyCreator.init();
   runApp(const MyApp());
 }
