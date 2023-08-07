@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:newsappusingcleanarchitechture/features/news/domain/entity/article.dart';
+
+ArticleModel articleResponseFromJson(String str) =>
+    ArticleModel.fromJson(json.decode(str));
 
 class ArticleModel extends ArticleEntity {
   const ArticleModel({

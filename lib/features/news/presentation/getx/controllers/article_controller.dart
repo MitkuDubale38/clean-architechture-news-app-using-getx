@@ -2,14 +2,16 @@ import 'package:get/get.dart';
 import 'package:newsappusingcleanarchitechture/core/resources/data_state.dart';
 import 'package:newsappusingcleanarchitechture/core/resources/local_data_state.dart';
 import 'package:newsappusingcleanarchitechture/features/news/domain/entity/article.dart';
+import 'package:newsappusingcleanarchitechture/features/news/domain/usecases/search_articles_usecase.dart';
 import 'package:newsappusingcleanarchitechture/features/news/domain/usecases/usecase.dart';
 
 class ArticleController extends GetxController {
   Rx<bool> isLoading = false.obs;
   RxList<ArticleEntity> articleList = RxList<ArticleEntity>([]);
   RxList<ArticleEntity> favArticleList = RxList<ArticleEntity>([]);
+  RxList<ArticleEntity> searchResultsArticleList = RxList<ArticleEntity>([]);
   final ArticleUseCase _articleUseCase = ArticleUseCase(Get.find());
-
+  final SearchArticleUseCase _searchArticleUseCase = SearchArticleUseCase();
   @override
   void onReady() {
     loadData();
@@ -21,7 +23,7 @@ class ArticleController extends GetxController {
     isLoading.value = true;
     final articles = await _articleUseCase.call();
     if (articles is DataSuccess) {
-      articleList.addAll(articles.data!.toList());
+      articleList.addAll(Iterable.castFrom(articles.data!));
     }
     isLoading.value = false;
     update();
@@ -59,10 +61,10 @@ class ArticleController extends GetxController {
     }
   }
 
-  List<ArticleEntity> search(String query, List<ArticleEntity> articles) {
-    List<ArticleEntity> results =
-        _articleUseCase.searchArticle(query, articles);
-    return results;
+  void search(String query, List<ArticleEntity> articles) async {
+    List<ArticleEntity> result = await _searchArticleUseCase.call(
+        param: SearchArticleParams(articles: articles, query: query));
+    searchResultsArticleList.assignAll(result);
   }
 
   bool isFavorite(ArticleEntity article) {

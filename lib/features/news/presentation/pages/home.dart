@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:newsappusingcleanarchitechture/features/news/presentation/controllers/article_controller.dart';
+import 'package:newsappusingcleanarchitechture/features/news/presentation/getx/controllers/article_controller.dart';
 import 'package:newsappusingcleanarchitechture/features/news/presentation/pages/article_search_delegate.dart';
 
 // ignore: must_be_immutable

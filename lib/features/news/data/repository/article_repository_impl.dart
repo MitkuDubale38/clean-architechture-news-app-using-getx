@@ -1,35 +1,26 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:newsappusingcleanarchitechture/core/network/Api/NewsApi/newsApiService.dart';
 import 'package:newsappusingcleanarchitechture/core/resources/data_state.dart';
 import 'package:newsappusingcleanarchitechture/core/resources/local_data_state.dart';
 import 'package:newsappusingcleanarchitechture/features/news/data/data_source/local/hive_service.dart';
-import 'package:newsappusingcleanarchitechture/features/news/data/data_source/remote/news_api_service.dart';
 import 'package:newsappusingcleanarchitechture/features/news/data/models/article.dart';
 import 'package:newsappusingcleanarchitechture/features/news/domain/entity/article.dart';
 import 'package:newsappusingcleanarchitechture/features/news/domain/repository/article_repository.dart';
 
 class ArticleRepositoryImpl implements ArticleRepository {
-  final NewsApiService _newsApiService;
+  final NewsNetworkService _newsApiService;
   final HiveStorage _hiveStorage;
   ArticleRepositoryImpl(this._newsApiService, this._hiveStorage);
 
   @override
-  Future<DataState<List<ArticleModel>>> getNewsArticles() async {
+  Future<DataState<List<ArticleModel?>>> getNewsArticles() async {
     try {
-      final httpResponse = await _newsApiService.getNewsArticles(
-          apiKey: "2a49c2171ea1471f8221aae7966a38c5", domain: "techcrunch.com");
-
-      if (httpResponse.response.statusCode == HttpStatus.ok) {
-        return DataSuccess(httpResponse.data);
+      final httpResponse = await _newsApiService.fetchNewsArticles(
+          "techcrunch.com", "2a49c2171ea1471f8221aae7966a38c5");
+      if (httpResponse.isNotEmpty) {
+        return DataSuccess(httpResponse);
       } else {
-        return DataFailed(
-          DioException(
-            requestOptions: httpResponse.response.requestOptions,
-            error: httpResponse.response.statusMessage,
-            type: DioExceptionType.unknown,
-            response: httpResponse.response,
-          ),
-        );
+        return DataSuccess(List<ArticleModel?>.empty());
       }
     } on DioException catch (ex) {
       return DataFailed(ex);
