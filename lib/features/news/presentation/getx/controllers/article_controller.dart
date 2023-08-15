@@ -24,6 +24,12 @@ class ArticleController extends GetxController {
     final articles = await _articleUseCase.call();
     if (articles is DataSuccess) {
       articleList.addAll(Iterable.castFrom(articles.data!));
+    } else if (articles is DataFailed) {
+      Get.snackbar(
+        "Error",
+        articles.error,
+        snackPosition: SnackPosition.BOTTOM,
+      );
     }
     isLoading.value = false;
     update();

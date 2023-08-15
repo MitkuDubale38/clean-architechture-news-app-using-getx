@@ -1,13 +1,9 @@
-import 'package:http/http.dart';
-import 'package:newsappusingcleanarchitechture/core/util/HttpClient/httpAttribOptions.dart';
-import 'package:newsappusingcleanarchitechture/core/util/HttpClient/httpService.dart';
-import 'package:http/http.dart' as http;
-import 'package:http/retry.dart';
-import 'package:newsappusingcleanarchitechture/core/util/HttpClient/httpStatusWorthRetrying.dart';
+part of cleanArchitectureUtils;
 
 class HttpServiceImpl implements HttpService {
   @override
-  Future<String?> send(HttpClientAttributeOptions httpAttribOptions) async {
+  Future<dynamic> sendHttpRequest(
+      HttpClientAttributeOptions httpAttribOptions) async {
     try {
       // instantiating  http client class
       final httpClient =
@@ -16,41 +12,45 @@ class HttpServiceImpl implements HttpService {
         return HttpStatusWorthRetying.isWorthRetrying(response.statusCode);
       });
 
-      //preparing response object
-      Response? response;
+      //instantiating response object
+      http.Response? response;
+
+      //instantiating http processor class
+      ProcessHttpRequest processHttpRequest = ProcessHttpRequest();
 
       //preparing header
-      Map<String, String> header = {
-        'Content-type': httpAttribOptions.contentType,
-        'Authorization': "  Bearer "
-      };
+      PrepareHeader prepareHeader = PrepareHeader(
+          contentType: httpAttribOptions.contentType,
+          isAuthorizationRequired: httpAttribOptions.isAuthorizationRequired);
 
       //assigning header
-      httpAttribOptions.headers = header;
+      httpAttribOptions.headers = prepareHeader.header;
 
-      //returning response based on request method
-      if (httpAttribOptions.method == HttpMethod.GET) {
-        // creating http clients url by passing base url, url and query parameters
-        response = await httpClient
-            .get(
-              Uri.https(httpAttribOptions.baseUrl, httpAttribOptions.url,
-                  httpAttribOptions.param),
-              headers: httpAttribOptions.headers,
-            )
-            .timeout(
-              Duration(seconds: httpAttribOptions.connectionTimeout),
-            );
-        if (response.statusCode == 200) {
-          return response.body;
-        } else if (response.statusCode == 401 || response.statusCode == 403) {
-          //refresh access token and retry the request  again
-        }
-      } else if (httpAttribOptions.method == HttpMethod.PUT) {
-      } else if (httpAttribOptions.method == HttpMethod.PATCH) {
-      } else if (httpAttribOptions.method == HttpMethod.DELETE) {
-      } else if (httpAttribOptions.method == HttpMethod.POST) {}
-    } catch (ex) {
-      print(ex);
+      switch (httpAttribOptions.method) {
+        case HttpMethod.GET:
+          response = await processHttpRequest.processGetRequest(
+              httpClient, httpAttribOptions);
+          if (response.statusCode == 200) {
+            return response;
+          } else if (response.statusCode == 401 || response.statusCode == 403) {
+            //refresh access token and retry the request  again
+          }
+          break;
+        case HttpMethod.POST:
+          response = await processHttpRequest.processPostRequest(
+              httpClient, httpAttribOptions);
+          if (response.statusCode == 201) {
+            return response;
+          } else if (response.statusCode == 401 || response.statusCode == 403) {
+            //refresh access token and retry the request  again
+          }
+          break;
+        default:
+          break;
+      }
+    } on Exception catch (e) {
+      String message = HandleHttpException().handleHttpResponse(e);
+      
     }
     return null;
   }

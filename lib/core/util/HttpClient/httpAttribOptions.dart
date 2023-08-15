@@ -9,6 +9,7 @@ class HttpClientAttributeOptions {
   Map<String, String>? param;
   Map<String, String>? headers;
   int retries;
+  bool isAuthorizationRequired;
   HttpClientAttributeOptions({
     required this.baseUrl,
     required this.url,
@@ -19,6 +20,7 @@ class HttpClientAttributeOptions {
     this.headers,
     this.param,
     required this.retries,
+    required this.isAuthorizationRequired,
   });
 }
 

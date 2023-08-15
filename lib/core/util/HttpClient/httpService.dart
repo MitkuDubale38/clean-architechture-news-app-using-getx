@@ -1,5 +1,6 @@
-import 'package:newsappusingcleanarchitechture/core/util/HttpClient/httpAttribOptions.dart';
+part of cleanArchitectureUtils;
 
-abstract class HttpService{
-   Future<String?> send(HttpClientAttributeOptions httpAttribOptions);
+abstract class HttpService {
+  Future<dynamic> sendHttpRequest(
+      HttpClientAttributeOptions httpAttribOptions);
 }

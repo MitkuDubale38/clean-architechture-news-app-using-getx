@@ -14,23 +14,14 @@ class ArticleRepositoryImpl implements ArticleRepository {
 
   @override
   Future<DataState<List<ArticleModel?>>> getNewsArticles() async {
-    try {
-      final httpResponse = await _newsApiService.fetchNewsArticles(
-          "techcrunch.com", "2a49c2171ea1471f8221aae7966a38c5");
-      if (httpResponse.isNotEmpty) {
-        return DataSuccess(httpResponse);
-      } else {
-        return DataSuccess(List<ArticleModel?>.empty());
-      }
-    } on DioException catch (ex) {
-      return DataFailed(ex);
-    }
+    final httpResponse = await _newsApiService.fetchNewsArticles(
+        "techcrunch.com", "2a49c2171ea1471f8221aae7966a38c5");
+    return httpResponse;
   }
 
   @override
   Future<LocalDataState<bool>> addToFavorite(ArticleEntity article) async {
     final favData = await _hiveStorage.getSavedData("favorites");
-
     List<Map<String, dynamic>> articles = [...favData ?? []];
     articles.add(ArticleModel.fromEntity(article).toMap());
     try {
