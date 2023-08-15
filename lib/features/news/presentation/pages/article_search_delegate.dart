@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:newsappusingcleanarchitechture/features/news/domain/entity/article.dart';
-import 'package:newsappusingcleanarchitechture/features/news/presentation/controllers/article_controller.dart';
+import 'package:newsappusingcleanarchitechture/features/news/presentation/getx/controllers/article_controller.dart';
 
 class ArticleSearchDelegate extends SearchDelegate<List<ArticleEntity>> {
   final List<ArticleEntity> articles;
   ArticleController articleController = Get.find();
+
+  @override
+  String get query;
+
   ArticleSearchDelegate(this.articles);
 
   @override
@@ -32,33 +36,39 @@ class ArticleSearchDelegate extends SearchDelegate<List<ArticleEntity>> {
 
   @override
   Widget buildResults(BuildContext context) {
-    List<ArticleEntity> results = articleController.search(query, articles);
-    return ListView.builder(
-      itemCount: results.length,
-      itemBuilder: (context, index) {
-        final article = results[index];
-        return ListTile(
-          title: Text(article.title!),
-          subtitle: Text(article.description!),
-          onTap: () {},
-        );
-      },
-    );
+    articleController.search(query, articles);
+    List<ArticleEntity> results = articleController.searchResultsArticleList;
+    return Obx(() {
+      return ListView.builder(
+        itemCount: results.length,
+        itemBuilder: (context, index) {
+          final article = results[index];
+          return ListTile(
+            title: Text(article.title!),
+            subtitle: Text(article.description!),
+            onTap: () {},
+          );
+        },
+      );
+    });
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    List<ArticleEntity> results = articleController.search(query, articles);
-    return ListView.builder(
-      itemCount: results.length,
-      itemBuilder: (context, index) {
-        final article = results[index];
-        return ListTile(
-          title: Text(article.title!),
-          subtitle: Text(article.description!),
-          onTap: () {},
-        );
-      },
-    );
+    List<ArticleEntity> results = articleController.searchResultsArticleList;
+    articleController.search(query, articles);
+    return Obx(() {
+      return ListView.builder(
+        itemCount: results.length,
+        itemBuilder: (context, index) {
+          final article = results[index];
+          return ListTile(
+            title: Text(article.title!),
+            subtitle: Text(article.description!),
+            onTap: () {},
+          );
+        },
+      );
+    });
   }
 }

@@ -4,24 +4,14 @@ import 'package:newsappusingcleanarchitechture/core/usecases/usecase.dart';
 import 'package:newsappusingcleanarchitechture/features/news/domain/entity/article.dart';
 import 'package:newsappusingcleanarchitechture/features/news/domain/repository/article_repository.dart';
 
-class ArticleUseCase implements UseCase<DataState<List<ArticleEntity>>, void> {
+class ArticleUseCase implements UseCase<DataState<List<ArticleEntity?>>, void> {
   final ArticleRepository _articleRepository;
 
   ArticleUseCase(this._articleRepository);
 
   @override
-  Future<DataState<List<ArticleEntity>>> call({void param}) {
+  Future<DataState<List<ArticleEntity?>>> call({void param}) {
     return _articleRepository.getNewsArticles();
-  }
-
-  List<ArticleEntity> searchArticle(
-      String query, List<ArticleEntity> articles) {
-    final results = articles
-        .where((article) =>
-            article.title!.toLowerCase().contains(query.toLowerCase()) ||
-            article.description!.toLowerCase().contains(query.toLowerCase()))
-        .toList();
-    return results;
   }
 
   Future<LocalDataState<bool>> saveToFavorites(ArticleEntity article) {

@@ -1,4 +1,9 @@
+import 'dart:convert';
+
 import 'package:newsappusingcleanarchitechture/features/news/domain/entity/article.dart';
+
+ArticleModel articleResponseFromJson(String str) =>
+    ArticleModel.fromJson(json.decode(str));
 
 class ArticleModel extends ArticleEntity {
   const ArticleModel({
@@ -30,6 +35,18 @@ class ArticleModel extends ArticleEntity {
     );
   }
   Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'author': author,
+      'title': title,
+      'description': description,
+      'url': url,
+      'urlToImage': urlToImage,
+      'publishedAt': publishedAt,
+      'content': content,
+    };
+  }
+
+  Map<String, dynamic> toJson() {
     return <String, dynamic>{
       'author': author,
       'title': title,
