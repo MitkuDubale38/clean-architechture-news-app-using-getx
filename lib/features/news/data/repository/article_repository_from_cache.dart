@@ -20,7 +20,7 @@ class ArticleRepositoryFromCacheImpl implements ArticleRepository {
         CacheServiceImplementation();
     var data = await cacheServiceImplementation
         .cacheData(NewsApiCacheProperty("News", ""));
-    if (data is CacheDataFailed) {
+    if (data is CacheDataSuccess) {
       var result = jsonDecode(data!.data);
       List<ArticleModel> value = await result
           .map<ArticleModel>(
@@ -28,7 +28,7 @@ class ArticleRepositoryFromCacheImpl implements ArticleRepository {
           .toList();
       return DataSuccess(value);
     } else {
-      return const DataFailed("Error occured while loading news articles");
+      return const DataFailed("Error getting news articles");
     }
   }
 
