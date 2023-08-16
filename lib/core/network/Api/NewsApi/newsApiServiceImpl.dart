@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
+import 'package:newsappusingcleanarchitechture/core/cache/cache_attrib_options.dart';
 import 'package:newsappusingcleanarchitechture/core/cache/cache_service_impl.dart';
 import 'package:newsappusingcleanarchitechture/core/network/Api/NewsApi/newsApiCacheProps.dart';
 import 'package:newsappusingcleanarchitechture/core/network/Api/NewsApi/newsApiHttpAttributes.dart';
@@ -25,8 +26,11 @@ class NewsApiServiceImpl implements NewsNetworkService {
           .toList();
       CacheServiceImplementation cacheServiceImplementation =
           CacheServiceImplementation();
-      cacheServiceImplementation
-          .cacheData(NewsApiCacheProperty("News", jsonEncode(value)));
+      cacheServiceImplementation.cacheData(NewsApiCacheProperty(
+          isAddingAnItemToCacheList: false,
+          dataKey: "News",
+          dataValue: jsonEncode(value),
+          operation: OPERATIONS.CREATE));
       return DataSuccess(value);
     } on HttpException catch (ex) {
       return DataFailed(

@@ -1,16 +1,18 @@
-import 'package:dio/dio.dart';
+import 'dart:convert';
+import 'package:newsappusingcleanarchitechture/core/cache/cache_attrib_options.dart';
+import 'package:newsappusingcleanarchitechture/core/cache/cache_service_impl.dart';
+import 'package:newsappusingcleanarchitechture/core/network/Api/NewsApi/newsApiCacheProps.dart';
 import 'package:newsappusingcleanarchitechture/core/network/Api/NewsApi/newsApiService.dart';
 import 'package:newsappusingcleanarchitechture/core/resources/data_state.dart';
-import 'package:newsappusingcleanarchitechture/core/resources/local_data_state.dart';
-import 'package:newsappusingcleanarchitechture/features/news/data/data_source/local/hive_service.dart';
 import 'package:newsappusingcleanarchitechture/features/news/data/models/article.dart';
 import 'package:newsappusingcleanarchitechture/features/news/domain/entity/article.dart';
 import 'package:newsappusingcleanarchitechture/features/news/domain/repository/article_repository.dart';
 
 class ArticleRepositoryImpl implements ArticleRepository {
   final NewsNetworkService _newsApiService;
-  final HiveStorage _hiveStorage;
-  ArticleRepositoryImpl(this._newsApiService, this._hiveStorage);
+  ArticleRepositoryImpl(this._newsApiService);
+  CacheServiceImplementation cacheServiceImplementation =
+      CacheServiceImplementation();
 
   @override
   Future<DataState<List<ArticleModel?>>> getNewsArticles() async {
@@ -20,38 +22,55 @@ class ArticleRepositoryImpl implements ArticleRepository {
   }
 
   @override
-  Future<LocalDataState<bool>> addToFavorite(ArticleEntity article) async {
-    final favData = await _hiveStorage.getSavedData("favorites");
-    List<Map<String, dynamic>> articles = [...favData ?? []];
-    articles.add(ArticleModel.fromEntity(article).toMap());
+  Future<DataState<List<ArticleEntity>>> getFavorites() async {
     try {
-      await _hiveStorage.saveData("favorites", articles);
-      return const LocalDataSuccess(true);
+      var favData = await cacheServiceImplementation.cacheData(
+          NewsApiCacheProperty(dataKey: "FAV", operation: OPERATIONS.READ));
+      List<ArticleModel> articles = (jsonDecode(favData!.data) as List)
+          .map((x) => ArticleModel.fromJson(x))
+          .toList();
+      return DataSuccess(articles);
     } catch (ex) {
-      return const LocalDataFailed(false);
+      return DataFailed(ex);
     }
   }
 
   @override
-  Future<LocalDataState<List<ArticleModel>>> getFavoriteArticles() async {
+  Future<DataState<String>> saveArticleToFavorites(
+      ArticleEntity article) async {
     try {
-      final favData = await _hiveStorage.getSavedData("favorites");
-      List<ArticleModel> articles =
-          (favData as List).map((x) => ArticleModel.fromJson(x)).toList();
-      return LocalDataSuccess(articles);
+      List<dynamic> previousData = [];
+      dynamic data = await cacheServiceImplementation.cacheData(
+          NewsApiCacheProperty(dataKey: "FAV", operation: OPERATIONS.READ));
+      if (data.data != null) {
+        var prevDataTemp = jsonDecode(data.data);
+        previousData = [...prevDataTemp];
+      }
+      dynamic currentData = ArticleModel.fromEntity(article).toMap();
+      previousData.add(currentData);
+
+      await cacheServiceImplementation.cacheData(NewsApiCacheProperty(
+          isAddingAnItemToCacheList: true,
+          dataKey: "FAV",
+          dataValue: jsonEncode(previousData),
+          operation: OPERATIONS.CREATE));
+      return const DataSuccess("HIVE SAVED");
     } catch (ex) {
-      return LocalDataFailed(ex);
+      return const DataFailed(false);
     }
   }
 
   @override
-  Future<LocalDataState<bool>> removeFromFavorite(ArticleEntity article) async {
+  Future<DataState<String>> saveFavorites(List<ArticleEntity> articles) async {
     try {
-      await _hiveStorage.removeItemFromData(
-          "favorites", ArticleModel.fromEntity(article).toMap());
-      return const LocalDataSuccess(true);
+      await cacheServiceImplementation.cacheData(NewsApiCacheProperty(
+          isAddingAnItemToCacheList: true,
+          dataKey: "FAV",
+          dataValue: jsonEncode(articles),
+          operation: OPERATIONS.CREATE));
+      return const DataSuccess("HIVE SAVED");
     } catch (ex) {
-      return const LocalDataFailed(false);
+      return const DataFailed(false);
     }
   }
 }

@@ -8,6 +8,8 @@ class CacheAttribOptions {
   OPERATIONS operation;
   int expiresAfterDay;
   bool isLazyLoad = false;
+  bool isAddingAnItemToCacheList;
+  bool isRemovingAnItemFromCacheList;
 
   CacheAttribOptions({
     this.collection,
@@ -18,6 +20,8 @@ class CacheAttribOptions {
     required this.operation,
     required this.expiresAfterDay,
     required this.isLazyLoad,
+    this.isAddingAnItemToCacheList = false,
+    this.isRemovingAnItemFromCacheList = false,
   });
 }
 
